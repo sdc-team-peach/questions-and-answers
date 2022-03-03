@@ -1,0 +1,28 @@
+{
+  "name": "questions-and-answers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bulganerdenebaatar/questions-and-answers.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bulganerdenebaatar/questions-and-answers/issues"
+  },
+  "homepage": "https://github.com/bulganerdenebaatar/questions-and-answers#readme",
+  "dependencies": {
+    "axios": "^0.26.0",
+    "csv-parser": "^3.0.0",
+    "express": "^4.17.3",
+    "node": "^17.5.0",
+    "nodemon": "^2.0.15"
+  }
+}
