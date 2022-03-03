@@ -1,4 +1,6 @@
-CREATE TABLE questions (
+CREATE SCHEMA sdc;
+
+CREATE TABLE sdc.questions (
  id BIGSERIAL,
  product_id INTEGER,
  body TEXT,
@@ -10,9 +12,9 @@ CREATE TABLE questions (
 );
 
 
-ALTER TABLE questions ADD CONSTRAINT questions_pkey PRIMARY KEY (id);
+ALTER TABLE sdc.questions ADD CONSTRAINT questions_pkey PRIMARY KEY (id);
 
-CREATE TABLE answers  (
+CREATE TABLE sdc.answers  (
  id BIGSERIAL,
  question_id INTEGER NOT NULL,
  body TEXT,
@@ -24,16 +26,24 @@ CREATE TABLE answers  (
 );
 
 
-ALTER TABLE answers  ADD CONSTRAINT answers_pkey PRIMARY KEY (id);
+ALTER TABLE sdc.answers  ADD CONSTRAINT answers_pkey PRIMARY KEY (id);
 
-CREATE TABLE answers_photos (
+CREATE TABLE sdc.answers_photos (
  id BIGSERIAL,
  answer_id INTEGER NOT NULL,
  url TEXT NOT NULL
 );
 
 
-ALTER TABLE answers_photos ADD CONSTRAINT answers_photos_pkey PRIMARY KEY (id);
+ALTER TABLE sdc.answers_photos ADD CONSTRAINT answers_photos_pkey PRIMARY KEY (id);
 
-ALTER TABLE answers  ADD CONSTRAINT answers_question_id_fkey FOREIGN KEY (question_id) REFERENCES questions(id);
-ALTER TABLE answers_photos ADD CONSTRAINT answers_photos_answer_id_fkey FOREIGN KEY (answer_id) REFERENCES answers (id);
+ALTER TABLE sdc.answers  ADD CONSTRAINT answers_question_id_fkey FOREIGN KEY (question_id) REFERENCES sdc.questions(id);
+ALTER TABLE sdc.answers_photos ADD CONSTRAINT answers_photos_answer_id_fkey FOREIGN KEY (answer_id) REFERENCES sdc.answers (id);
+
+-- CREATE SCHEMA
+-- \i /Users/bulganerdenebaatar/Desktop/hackreactor2201/questions-and-answers/server/schema.sql
+
+-- IMPORT CSV DATA
+-- COPY sdc.answers_photos FROM '/Users/bulganerdenebaatar/Downloads/answers_photos.csv' delimiter ',' CSV HEADER ;
+-- COPY sdc.questions FROM '/Users/bulganerdenebaatar/Downloads/questions.csv' delimiter ',' CSV HEADER ;
+-- COPY sdc.answers FROM '/Users/bulganerdenebaatar/Downloads/answers.csv' delimiter ',' CSV HEADER ;
