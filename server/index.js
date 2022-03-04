@@ -1,19 +1,15 @@
-const fs = require('fs');
-const csv = require('csv-parser');
+const Controller = require('../controller/index.js');
 
-fs.createReadStream('/Users/bulganerdenebaatar/Downloads/questions.csv')
-.pipe(csv())
-.on('data', function(data){
-    try {
-        console.log("Name is: "+data.date_written);
-        // console.log("Age is: "+data.AGE);
+const express = require('express');
+const app = express();
+const PORT = 3001 || process.env.PORT;
 
-        //perform the operation
-    }
-    catch(err) {
-        //error handler
-    }
+app.use(express.urlencoded({ extended: true }));
+// app.use(express.json({ extended: true }));
+app.use(express.static('client/dist'));
+
+app.get('/questions', Controller.getQuestions );
+
+app.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
 })
-.on('end',function(){
-    //some final operation
-});

@@ -4,7 +4,7 @@ CREATE TABLE sdc.questions (
  id BIGSERIAL,
  product_id INTEGER,
  body TEXT,
- date_written DATE,
+ date_written TIMESTAMPTZ,
  asker_name VARCHAR(60),
  asker_email VARCHAR,
  reported INTEGER NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE sdc.answers  (
  id BIGSERIAL,
  question_id INTEGER NOT NULL,
  body TEXT,
- date_written DATE,
+ date_written TIMESTAMPTZ,
  answerer_name VARCHAR(60),
  answerer_email VARCHAR,
  reported INTEGER,
@@ -45,5 +45,12 @@ ALTER TABLE sdc.answers_photos ADD CONSTRAINT answers_photos_answer_id_fkey FORE
 
 -- IMPORT CSV DATA
 -- COPY sdc.answers_photos FROM '/Users/bulganerdenebaatar/Downloads/answers_photos.csv' delimiter ',' CSV HEADER ;
--- COPY sdc.questions FROM '/Users/bulganerdenebaatar/Downloads/questions.csv' delimiter ',' CSV HEADER ;
--- COPY sdc.answers FROM '/Users/bulganerdenebaatar/Downloads/answers.csv' delimiter ',' CSV HEADER ;
+
+-- COPY sdc.questions FROM '/Users/bulganerdenebaatar/Desktop/hackreactor2201/questions-and-answers/server/csv-files/questions.csv' delimiter ',' CSV HEADER ;
+
+-- select * from sdc.questions limit 10; // test it
+
+-- COPY sdc.answers FROM '/Users/bulganerdenebaatar/Desktop/hackreactor2201/questions-and-answers/server/answers.csv' delimiter ',' CSV HEADER ;
+
+
+-- brew services start postgresql
