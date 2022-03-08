@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha tests/server.spec.js --timeout 1000000",
+    "test:watch": "npm run test -- --watch"
   },
   "repository": {
     "type": "git",
@@ -20,9 +21,19 @@
   "homepage": "https://github.com/bulganerdenebaatar/questions-and-answers#readme",
   "dependencies": {
     "axios": "^0.26.0",
+    "csv": "^6.0.5",
     "csv-parser": "^3.0.0",
     "express": "^4.17.3",
     "node": "^17.5.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.3",
+    "postgres": "^1.0.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
+    "chai": "^4.3.6",
+    "jest": "^27.5.1",
+    "mocha": "^9.2.1",
+    "supertest": "^6.2.2"
   }
 }
