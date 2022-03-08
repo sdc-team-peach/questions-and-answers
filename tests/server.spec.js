@@ -28,3 +28,12 @@ describe('post question endpoint', () => {
       expect(response.statusCode).to.equal(201);
 	});
 })
+
+describe('post answer endpoint', () => {
+	it('should return a 201 status code', async () => {
+		const response = await request(baseUrl)
+      .post('questions/36/answers')
+      .send({"photos": '', "body": "my post test", "name": "dory", "email": "dory@yahoo.com"})
+      expect(response.statusCode).to.equal(201);
+	});
+})
