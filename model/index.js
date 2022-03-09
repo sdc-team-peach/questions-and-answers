@@ -19,7 +19,7 @@ const pool = new Pool({
 //   })
 // }
 const getQuestions = (productId, callback) => {
-  pool.query('SELECT q.id question_id, q.body question_body, q.date_written question_date, q.asker_name, q.helpful question_helpfulness, q.reported,(select json_object_agg(a.id, row_to_json(a)) from (SELECT id, body, date_written as date, answerer_name, helpful as helpfulness, (select json_agg(p.url) from sdc.answers_photos as p where p.answer_id = sdc.answers.id)photos from sdc.answers where question_id = q.id) a) answers from sdc.questions as q where product_id=$1', [productId],
+  pool.query("SELECT q.id question_id, q.body question_body, q.date_written question_date, q.asker_name, q.helpful question_helpfulness, q.reported,(select json_object_agg(a.id, row_to_json(a)) from (SELECT id, body, date_written as date, answerer_name, helpful as helpfulness, (select json_agg(json_build_object('id', p.id, 'url', p.url)) from sdc.answers_photos as p where p.answer_id = sdc.answers.id)photos from sdc.answers where question_id = q.id) a) answers from sdc.questions as q where product_id=$1", [productId],
     (err, res) => {
     if (err) {
       callback(err)
@@ -31,7 +31,7 @@ const getQuestions = (productId, callback) => {
 }
 // POST /qa/questions
 const addQuestion = (params, callback) => {
-  console.log('params', params)
+  // console.log('params', params)
   const { product_id, body, name, email } = params;
   const date_written = new Date();
   pool.query('INSERT INTO sdc.questions (product_id, body, asker_name, asker_email, date_written, reported, helpful) VALUES ($1 , $2 , $3 , $4, $5, $6, $7)', [ product_id, body, name, email, date_written, 0, 0 ], (err, res) => {
@@ -82,7 +82,6 @@ const getAnswers = (questionId, callback) => {
 }
 // POST /qa/questions/:question_id/answers
 const addAnswer = (params, callback) => {
-  console.log('params model------', params)
   const { body, name, email, photos } = params.body
   const questionId = params.questionId
   const date_written = new Date()
@@ -95,4 +94,47 @@ const addAnswer = (params, callback) => {
   })
 }
 
-module.exports = { getQuestions, getAnswers, addQuestion, addAnswer }
+const updateQuestionHelpful = (questId, callback) => {
+  // console.log(questId);
+  pool.query(`UPDATE sdc.questions SET helpful= helpful+1  WHERE id=${questId};` , (err, res) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(null, res)
+    }
+  })
+}
+
+const reportQuestion = (questId, callback) => {
+  pool.query(`UPDATE sdc.questions SET reported=1 WHERE id=${questId};` , (err, res) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(null, res)
+    }
+  })
+}
+
+const updateAnswerHelpful = (ansId, callback) => {
+  pool.query(`UPDATE sdc.answers SET helpful=helpful+1  WHERE id=${ansId}` , (err, res) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(null, res)
+    }
+  })
+}
+
+const reportAnswer = (ansId, callback) => {
+  // console.log(ansId)
+  pool.query(`UPDATE sdc.answers SET reported=1 WHERE id=${ansId}` , (err, res) => {
+    if (err) {
+      // console.log(err)
+      callback(err)
+    } else {
+      callback(null, res)
+    }
+  })
+}
+
+module.exports = { getQuestions, getAnswers, addQuestion, addAnswer, updateQuestionHelpful, reportQuestion, updateAnswerHelpful, reportAnswer }
