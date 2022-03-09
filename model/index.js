@@ -19,64 +19,20 @@ const pool = new Pool({
 //   })
 // }
 const getQuestions = (productId, callback) => {
-  // console.log(productId);
-  // SELECT row_to_json(results) from (SELECT * from sdc.questions where sdc.questions.id = 34) as results
-  pool.query(`
-  select
-    json_agg(
-            json_build_object(
-                'question_id', q.id,
-                'question_body', q.body,
-                'question_date', q.date_written,
-                'asker_name',q.asker_name,
-                'question_helpfulness', q.helpful, 'reported', q.reported,
-                'answers', tanswers
-            )
-    )
-from sdc.questions q
-left join (
-    select
-        question_id,
-        json_object_agg(a.id,
-            json_build_object(
-                'id', a.id,
-                'body', a.body,
-                'date', a.date_written,
-                'answerer_name', a.answerer_name,
-                'helpfulness', a.helpful,
-                'photos', t_answer_photos
-                )
-            ) tanswers
-    from
-        sdc.answers a
-        left join (
-            select
-                answer_id,
-                json_agg(
-                    json_build_object(
-                        'id', ap.id,
-                        'url', ap.url
-                    )
-                ) t_answer_photos
-            from sdc.answers_photos ap
-            group by answer_id
-        ) ap on a.id = ap.answer_id
-    group by question_id
-) a on q.id = a.question_id
-WHERE q.product_id = ${productId};
- `,
- (err, res) => {
+  pool.query('SELECT q.id question_id, q.body question_body, q.date_written question_date, q.asker_name, q.helpful question_helpfulness, q.reported,(select json_object_agg(a.id, row_to_json(a)) from (SELECT id, body, date_written as date, answerer_name, helpful as helpfulness, (select json_agg(p.url) from sdc.answers_photos as p where p.answer_id = sdc.answers.id)photos from sdc.answers where question_id = q.id) a) answers from sdc.questions as q where product_id=$1', [productId],
+    (err, res) => {
     if (err) {
       callback(err)
     } else {
-      const results = res.rows[0].json_agg
+      const results = res.rows;
       callback(null, {"product_id": productId, results})
     }
   })
 }
 // POST /qa/questions
 const addQuestion = (params, callback) => {
-  const { product_id, body, name, email} = params;
+  console.log('params', params)
+  const { product_id, body, name, email } = params;
   const date_written = new Date();
   pool.query('INSERT INTO sdc.questions (product_id, body, asker_name, asker_email, date_written, reported, helpful) VALUES ($1 , $2 , $3 , $4, $5, $6, $7)', [ product_id, body, name, email, date_written, 0, 0 ], (err, res) => {
     if (err) {
@@ -89,11 +45,38 @@ const addQuestion = (params, callback) => {
 
 // GET /qa/questions/:question_id/answers
 const getAnswers = (questionId, callback) => {
-  pool.query(`SELECT * FROM sdc.answers where question_id=${questionId}`, (err, res) => {
+  pool.query(`
+  select
+    json_agg(
+      json_build_object(
+        'answer_id', a.id,
+        'body', a.body,
+        'date', a.date_written,
+        'answerer_name', a.answerer_name,
+        'helpfulness', a.helpful,
+        'photos', t_answer_photos
+        )
+      )
+    from
+      sdc.answers a
+      left join (
+        select
+          answer_id,
+          json_agg(
+            json_build_object(
+              'id', ap.id,
+              'url', ap.url
+            )
+          ) t_answer_photos
+        from sdc.answers_photos ap
+        group by answer_id
+      ) ap on a.id = ap.answer_id
+  WHERE a.question_id = ${questionId};`, (err, res) => {
     if (err) {
       callback(err)
     } else {
-      callback(null, res)
+      const results = res.rows[0].json_agg
+      callback(null, {"question": questionId, results})
     }
   })
 }
