@@ -9,8 +9,8 @@ export const options = {
 const randId = Math.floor(Math.random() * 100000);
 
 export default function() {
-  const getQuestionsRes = http.get(`http://localhost:3001/questions?product_id=${randId}`);
-  check(getQuestionsRes, {
+  const getAnswersRes = http.get(`http://localhost:3001/questions?question_id=${randId}/answers`);
+  check(getAnswersRes, {
     'res status is 200': r => r.status === 200,
     'transaction time < 200ms': r => r.timings.duration < 200,
     'transaction time < 500ms': r => r.timings.duration < 500,
@@ -19,4 +19,4 @@ export default function() {
   });
 }
 
-// k6 run tests/questionsTest.js
+// k6 run tests/answersTest.js

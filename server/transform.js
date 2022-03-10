@@ -13,5 +13,3 @@ fs.createReadStream('/Users/bulganerdenebaatar/Downloads/answers.csv')
   .on('finish', () => {
     console.log('Done 🍻 ');
   });
-
-  // date_written: new Date(input['date_written']).toLocaleDateString("en-US")
