@@ -1,9 +1,9 @@
 const { Pool } = require('pg')
 
 const pool = new Pool({
-  user: 'bulganerdenebaatar',
-  host: 'localhost',
-  database: 'postgres',
+  user: 'postgres',
+  host: '54.86.52.119',
+  database: 'sdc',
   password: '',
 })
 
@@ -11,6 +11,7 @@ const getQuestions = (productId, callback) => {
   pool.query("SELECT q.id question_id, q.body question_body, q.date_written question_date, q.asker_name, q.helpful question_helpfulness, q.reported,(select json_object_agg(a.id, row_to_json(a)) from (SELECT id, body, date_written as date, answerer_name, helpful as helpfulness, (select json_agg(json_build_object('id', p.id, 'url', p.url)) from sdc.answers_photos as p where p.answer_id = sdc.answers.id)photos from sdc.answers where question_id = q.id) a) answers from sdc.questions as q where product_id=$1", [productId],
     (err, res) => {
     if (err) {
+      console.log(err)
       callback(err);
     } else {
       const results = res.rows;

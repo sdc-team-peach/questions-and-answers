@@ -51,7 +51,7 @@ COPY sdc.questions FROM '/Users/bulganerdenebaatar/Desktop/hackreactor2201/quest
 
 COPY sdc.answers FROM '/Users/bulganerdenebaatar/Desktop/hackreactor2201/questions-and-answers/server/csv-files/answers.csv' delimiter ',' CSV HEADER ;
 
-COPY sdc.answers_photos FROM '/Users/bulganerdenebaatar/Downloads/answers_photos.csv' delimiter ',' CSV HEADER ;
+COPY sdc.answers_photos FROM '/Users/bulganerdenebaatar/Desktop/hackreactor2201/questions-and-answers/server/csv-files/answers_photos.csv' delimiter ',' CSV HEADER ;
 
 
 -- `
