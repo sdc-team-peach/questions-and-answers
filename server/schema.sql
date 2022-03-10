@@ -47,11 +47,11 @@ CREATE INDEX idx_question_id ON sdc.answers USING btree (question_id);
 CREATE INDEX idx_ans_photo_id ON sdc.answers_photos(id, answer_id);
 
 -- IMPORT CSV DATA
-COPY sdc.questions FROM 'csv-files/questions.csv' delimiter ',' CSV HEADER ;
+\COPY sdc.questions FROM 'server/csv-files/questions.csv' delimiter ',' CSV HEADER ;
 
-COPY sdc.answers FROM 'csv-files/answers.csv' delimiter ',' CSV HEADER ;
+\COPY sdc.answers FROM 'server/csv-files/answers.csv' delimiter ',' CSV HEADER ;
 
-COPY sdc.answers_photos FROM 'csv-files/answers_photos.csv' delimiter ',' CSV HEADER ;
+\COPY sdc.answers_photos FROM 'server/csv-files/answers_photos.csv' delimiter ',' CSV HEADER ;
 
 
 -- `
