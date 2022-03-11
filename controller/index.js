@@ -1,6 +1,7 @@
 const Model = require('../model/index.js');
 
 const getQuestions = (req, res) => {
+  console.log('running server on get request');
   Model.getQuestions(req.query.product_id, (err, results) => {
     if (err) {
       res.status(502).send();
