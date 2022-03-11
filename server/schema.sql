@@ -1,8 +1,8 @@
 DROP DATABASE IF EXISTS sdc;
 CREATE DATABASE sdc;
 
-DROP SCHEMA IF EXISTS sdc;
-CREATE SCHEMA sdc;
+-- DROP SCHEMA IF EXISTS sdc;
+-- CREATE SCHEMA sdc;
 
 DROP TABLE IF EXISTS sdc.questions, sdc.answers, sdc.answers_photos;
 
