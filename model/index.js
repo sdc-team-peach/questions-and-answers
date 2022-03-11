@@ -4,7 +4,8 @@ const pool = new Pool({
   user: 'postgres',
   host: '54.86.52.119',
   database: 'sdc',
-  password: '',
+  password: 'postgresuser',
+  port: 5432
 })
 
 const getQuestions = (productId, callback) => {
