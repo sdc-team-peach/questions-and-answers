@@ -12,6 +12,7 @@ const getQuestions = (req, res) => {
 }
 
 const addQuestion = (req, res) => {
+  console.log('server from get answers')
   Model.addQuestion(req.body, (err, result) => {
     if (err) {
       res.status(502).send();
