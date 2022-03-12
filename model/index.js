@@ -36,34 +36,16 @@ const addQuestion = (params, callback) => {
 
 // GET /qa/questions/:question_id/answers
 const getAnswers = (questionId, callback) => {
-  pool.query(`
-  select
-    json_agg(
-      json_build_object(
-        'answer_id', a.id,
-        'body', a.body,
-        'date', a.date_written,
-        'answerer_name', a.answerer_name,
-        'helpfulness', a.helpful,
-        'photos', t_answer_photos
-        )
-      )
-    from
-      sdc.answers a
-      left join (
-        select
-          answer_id,
-          json_agg(
-            json_build_object(
-              'id', ap.id,
-              'url', ap.url
-            )
-          ) t_answer_photos
-        from sdc.answers_photos ap
-        group by answer_id
-      ) ap on a.id = ap.answer_id
-  WHERE a.question_id = ${questionId};`, (err, res) => {
+  console.log('model get answers')
+  pool.query(`SELECT a.id, a.body, a.date, a.answerer_name,
+    a.helpfulness, (SELECT json_agg(json_build_object( 'id', p.id, 'url', p.url ))
+      FROM sdc.answers_photos as p
+      WHERE p.answer_id = a.id
+    ) as photos
+    FROM sdc.answers as a
+    WHERE question_id = $1 and reported = false`, (err, res) => {
     if (err) {
+      console.log('error from model',err)
       callback(err);
     } else {
       const results = res.rows[0].json_agg
