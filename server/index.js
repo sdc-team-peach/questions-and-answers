@@ -7,6 +7,10 @@ const PORT = 3001 || process.env.PORT;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('client/dist'));
 
+app.get('/loaderio-4b169e768122faf0e862d8270428a1d4', (req, res) => {
+  res.send('loaderio-4b169e768122faf0e862d8270428a1d4');
+})
+
 //GET requests
 app.get('/questions', Controller.getQuestions);
 app.get('/questions/:question_id/answers', Controller.getAnswers);
