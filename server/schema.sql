@@ -52,37 +52,3 @@ CREATE INDEX idx_ans_photo_id ON sdc.answers_photos(id, answer_id);
 \COPY sdc.answers FROM 'server/csv-files/answers.csv' delimiter ',' CSV HEADER ;
 
 \COPY sdc.answers_photos FROM 'server/csv-files/answers_photos.csv' delimiter ',' CSV HEADER ;
-
-
--- `
---  SELECT json_agg(results) as results from (
---    SELECT id as question_id, body as question_body, date_written as question_date, asker_name, helpful as question_helpfulness, reported  FROM sdc.questions WHERE sdc.questions.product_id = ${productId}
---  ) as results
---  `
-
-
--- TO CREATE SCHEMA
--- \i /Users/bulganerdenebaatar/Desktop/hackreactor2201/questions-and-answers/server/schema.sql
-
--- TO START PSQL
--- brew services start postgresql
--- psql sdc -U bulganerdenebaatar -f server/schema.sql
--- \c sdc;
-
---select setval('sdc.answers_id_seq', (select max(id) from sdc.answers)+1);
-
-
--- SELECT
---     tablename,
---     indexname,
---     indexdef
--- FROM
---     pg_indexes
--- WHERE
---     schemaname = 'sdc'
--- ORDER BY
---     tablename,
---     indexname;
-
-
--- SELECT q.id question_id, q.body question_body, q.date_written question_Date, q.asker_name, q.helpful question_helpfulness, q.reported,(select json_object_agg(a.id, row_to_json(a)) from (SELECT id, body, date_written as date, answerer_name, helpful as helpfulness, (select json_agg(p.url) from sdc.photos as p where p.answer_id = sdc.answers.id) sdc.photos from sdc.answers where question_id = $1 a) sdc.answers from sdc.questions as q where product_id=$1
