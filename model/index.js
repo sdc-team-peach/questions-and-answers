@@ -1,12 +1,13 @@
 const { Pool } = require('pg')
 
 const pool = new Pool({
-  user: 'bulganerdenebaatar',
-  // host: '54.86.52.119',
+  // user: 'bulganerdenebaatar',
+  user: 'postgres',
+  host: '54.86.52.119',
   database: 'sdc',
-  host: 'localhost'
-  // password: 'postgresuser',
-  // port: 5432
+  // host: 'localhost'
+  password: 'postgresuser',
+  port: 5432
 })
 
 const getQuestions = (productId, callback) => {
