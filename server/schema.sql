@@ -41,10 +41,10 @@ ALTER TABLE sdc.answers_photos ADD CONSTRAINT answers_photos_pkey PRIMARY KEY (i
 ALTER TABLE sdc.answers  ADD CONSTRAINT answers_question_id_fkey FOREIGN KEY (question_id) REFERENCES sdc.questions(id);
 ALTER TABLE sdc.answers_photos ADD CONSTRAINT answers_photos_answer_id_fkey FOREIGN KEY (answer_id) REFERENCES sdc.answers (id);
 
--- CREATE INDEX
-CREATE INDEX idx_questions_product_id ON sdc.questions USING btree (product_id);
-CREATE INDEX idx_question_id ON sdc.answers USING btree (question_id);
-CREATE INDEX idx_ans_photo_id ON sdc.answers_photos(id, answer_id);
+-- -- CREATE INDEX
+-- CREATE INDEX idx_questions_product_id ON sdc.questions (product_id);
+-- CREATE INDEX idx_question_id ON sdc.answers (question_id);
+-- CREATE INDEX idx_ans_photo_id ON sdc.answers_photos(answer_id);
 
 -- IMPORT CSV DATA
 \COPY sdc.questions FROM 'server/csv-files/questions.csv' delimiter ',' CSV HEADER ;
