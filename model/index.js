@@ -1,15 +1,17 @@
 const { Pool } = require('pg')
 
 const pool = new Pool({
+  // user: 'bulganerdenebaatar',
   user: 'postgres',
   host: '54.86.52.119',
   database: 'sdc',
+  // host: 'localhost'
   password: 'postgresuser',
   port: 5432
 })
 
 const getQuestions = (productId, callback) => {
-  pool.query("SELECT q.id question_id, q.body question_body, q.date_written question_date, q.asker_name, q.helpful question_helpfulness, q.reported,(select json_object_agg(a.id, row_to_json(a)) from (SELECT id, body, date_written as date, answerer_name, helpful as helpfulness, (select json_agg(json_build_object('id', p.id, 'url', p.url)) from sdc.answers_photos as p where p.answer_id = sdc.answers.id)photos from sdc.answers where question_id = q.id) a) answers from sdc.questions as q where product_id=$1", [productId],
+  pool.query("SELECT q.id question_id, q.body question_body, q.date_written question_date, q.asker_name, q.helpful question_helpfulness, q.reported,(select json_object_agg(a.id, row_to_json(a)) from (SELECT id, body, date_written as date, answerer_name, helpful as helpfulness, (select json_agg(json_build_object('id', p.id, 'url', p.url)) from answers_photos as p where p.answer_id = answers.id)photos from answers where question_id = q.id) a) answers from questions as q where product_id=$1", [productId],
     (err, res) => {
     if (err) {
       console.log(err)
@@ -25,7 +27,7 @@ const addQuestion = (params, callback) => {
   // console.log('params', params)
   const { product_id, body, name, email } = params;
   const date_written = new Date();
-  pool.query('INSERT INTO sdc.questions (product_id, body, asker_name, asker_email, date_written, reported, helpful) VALUES ($1 , $2 , $3 , $4, $5, $6, $7)', [ product_id, body, name, email, date_written, 0, 0 ], (err, res) => {
+  pool.query('INSERT INTO questions (product_id, body, asker_name, asker_email, date_written, reported, helpful) VALUES ($1 , $2 , $3 , $4, $5, $6, $7)', [ product_id, body, name, email, date_written, 0, 0 ], (err, res) => {
     if (err) {
       callback(err);
     } else {
