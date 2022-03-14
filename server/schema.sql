@@ -1,12 +1,13 @@
 DROP DATABASE IF EXISTS sdc;
 CREATE DATABASE sdc;
-
+\c sdc;
 -- DROP SCHEMA IF EXISTS sdc;
 -- CREATE SCHEMA sdc;
 
-DROP TABLE IF EXISTS sdc.questions, sdc.answers, sdc.answers_photos;
+DROP TABLE IF EXISTS sdc.questions, sdc.answers, sdc.answers_photos CASCADE;
+DROP TABLE IF EXISTS questions, answers, answers_photos CASCADE;
 
-CREATE TABLE sdc.questions (
+CREATE TABLE questions (
  id BIGSERIAL,
  product_id INTEGER,
  body TEXT,
@@ -16,9 +17,9 @@ CREATE TABLE sdc.questions (
  reported BOOLEAN,
  helpful INTEGER
 );
-ALTER TABLE sdc.questions ADD CONSTRAINT questions_pkey PRIMARY KEY (id);
+ALTER TABLE questions ADD CONSTRAINT questions_pkey PRIMARY KEY (id);
 
-CREATE TABLE sdc.answers  (
+CREATE TABLE answers  (
  id BIGSERIAL,
  question_id INTEGER NOT NULL,
  body TEXT,
@@ -28,27 +29,27 @@ CREATE TABLE sdc.answers  (
  reported BOOLEAN,
  helpful INTEGER
 );
-ALTER TABLE sdc.answers  ADD CONSTRAINT answers_pkey PRIMARY KEY (id);
+ALTER TABLE answers  ADD CONSTRAINT answers_pkey PRIMARY KEY (id);
 
-CREATE TABLE sdc.answers_photos (
+CREATE TABLE answers_photos (
  id BIGSERIAL,
  answer_id INTEGER NOT NULL,
  url TEXT NOT NULL
 );
-ALTER TABLE sdc.answers_photos ADD CONSTRAINT answers_photos_pkey PRIMARY KEY (id);
+ALTER TABLE answers_photos ADD CONSTRAINT answers_photos_pkey PRIMARY KEY (id);
 
 --CREATE FOREIGN KEYS
-ALTER TABLE sdc.answers  ADD CONSTRAINT answers_question_id_fkey FOREIGN KEY (question_id) REFERENCES sdc.questions(id);
-ALTER TABLE sdc.answers_photos ADD CONSTRAINT answers_photos_answer_id_fkey FOREIGN KEY (answer_id) REFERENCES sdc.answers (id);
+ALTER TABLE answers  ADD CONSTRAINT answers_question_id_fkey FOREIGN KEY (question_id) REFERENCES questions(id);
+ALTER TABLE answers_photos ADD CONSTRAINT answers_photos_answer_id_fkey FOREIGN KEY (answer_id) REFERENCES answers (id);
 
 -- -- CREATE INDEX
--- CREATE INDEX idx_questions_product_id ON sdc.questions (product_id);
--- CREATE INDEX idx_question_id ON sdc.answers (question_id);
--- CREATE INDEX idx_ans_photo_id ON sdc.answers_photos(answer_id);
+CREATE INDEX idx_questions_product_id ON questions (product_id);
+CREATE INDEX idx_question_id ON answers (question_id);
+CREATE INDEX idx_ans_photo_id ON answers_photos(answer_id);
 
 -- IMPORT CSV DATA
-\COPY sdc.questions FROM 'server/csv-files/questions.csv' delimiter ',' CSV HEADER ;
+\COPY questions FROM 'server/csv-files/questions.csv' delimiter ',' CSV HEADER ;
 
-\COPY sdc.answers FROM 'server/csv-files/answers.csv' delimiter ',' CSV HEADER ;
+\COPY answers FROM 'server/csv-files/answers.csv' delimiter ',' CSV HEADER ;
 
-\COPY sdc.answers_photos FROM 'server/csv-files/answers_photos.csv' delimiter ',' CSV HEADER ;
+\COPY answers_photos FROM 'server/csv-files/answers_photos.csv' delimiter ',' CSV HEADER ;
